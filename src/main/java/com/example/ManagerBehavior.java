@@ -9,7 +9,6 @@ import akka.actor.typed.javadsl.Receive;
 
 import java.io.Serializable;
 import java.math.BigInteger;
-import java.util.Random;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -60,13 +59,14 @@ public class ManagerBehavior extends AbstractBehavior<ManagerBehavior.Command> {
                         for (int i = 1; i <= 20; i++) {
                             ActorRef<WorkerBehavior.Command> actorRef = getContext().spawn(WorkerBehavior.create(), "Worker-" + i);
                             actorRef.tell(new WorkerBehavior.Command("start", getContext().getSelf()));
+                            actorRef.tell(new WorkerBehavior.Command("start", getContext().getSelf()));
                         }
                     }
                     return this;
                 })
                 .onMessage(ResultCommand.class, command -> {
                     primes.add(command.getResult());
-                    System.out.println("Recieved: "+command.getResult());
+                    System.out.println("Recieved: "+primes.size());
                     if(primes.size() == 20) {
                         System.out.println("all 20 primes recieved");
                     }
